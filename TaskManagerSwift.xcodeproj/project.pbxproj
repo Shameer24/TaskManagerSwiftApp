@@ -14,6 +14,7 @@
 		F89892DA2C3CB99900FE890C /* TaskManagerSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89892D92C3CB99900FE890C /* TaskManagerSwiftTests.swift */; };
 		F89892E42C3CB99900FE890C /* TaskManagerSwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89892E32C3CB99900FE890C /* TaskManagerSwiftUITests.swift */; };
 		F89892E62C3CB99900FE890C /* TaskManagerSwiftUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89892E52C3CB99900FE890C /* TaskManagerSwiftUITestsLaunchTests.swift */; };
+		F89892F32C3CBA4500FE890C /* dateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89892F22C3CBA4500FE890C /* dateExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		F89892DF2C3CB99900FE890C /* TaskManagerSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TaskManagerSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F89892E32C3CB99900FE890C /* TaskManagerSwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagerSwiftUITests.swift; sourceTree = "<group>"; };
 		F89892E52C3CB99900FE890C /* TaskManagerSwiftUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagerSwiftUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F89892F22C3CBA4500FE890C /* dateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dateExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 				F89892CB2C3CB99900FE890C /* Assets.xcassets */,
 				F89892CD2C3CB99900FE890C /* TaskManagerSwift.entitlements */,
 				F89892CE2C3CB99900FE890C /* Preview Content */,
+				F89892F22C3CBA4500FE890C /* dateExtensions.swift */,
 			);
 			path = TaskManagerSwift;
 			sourceTree = "<group>";
@@ -260,6 +263,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F89892CA2C3CB99700FE890C /* ContentView.swift in Sources */,
+				F89892F32C3CBA4500FE890C /* dateExtensions.swift in Sources */,
 				F89892C82C3CB99700FE890C /* TaskManagerSwiftApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
