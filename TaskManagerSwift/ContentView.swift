@@ -11,38 +11,34 @@ struct ContentView: View {
     @State private var currentDate : Date = .init()
     @State private var weekslider : [[Date.Weekday]] = []
     @State private var currentWeekIndex = 1
+    @State private var isCreateNewTask : Bool = false
+//    @State private var tasks : [Task]
     
 
     var body: some View {
         
         VStack(){
-            Header(currentDate: $currentDate)
-            
-            TabView(selection: $currentWeekIndex){
-                ForEach(0..<weekslider.count, id: \.self) { index in
-                    let week = weekslider[index]
-                    WeekView(currentDate: $currentDate, week : week)
-                        .tag(index)
+            Header(currentDate: $currentDate, currentWeekIndex: $currentWeekIndex, weekslider : $weekslider)
+            ScrollView(.vertical){
+                VStack{
+                    TasksView(currentDate : $currentDate)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .frame(maxHeight : .infinity, alignment: .top)
-            .onChange(of: currentWeekIndex) { oldvalue, newvalue in
-                if let firstDate = weekslider[currentWeekIndex].first?.date, newvalue == 0 {
-                    weekslider.insert(firstDate.fetchPreviousWeek(), at: 0)
-                    weekslider.removeLast()
-                    currentWeekIndex = 1
-                }
-                if let lastDate = weekslider[currentWeekIndex].last?.date, newvalue == weekslider.count - 1 {
-                    weekslider.append(lastDate.fetchNextWeek())
-                    weekslider.removeFirst()
-                    currentWeekIndex = 1
-                }
-                
-            }
+            .frame(maxHeight: .infinity, alignment: .top)
         }
-        .padding(15)
         .frame(maxHeight : .infinity, alignment: .top)
+        .overlay(alignment : .bottomTrailing,content: {
+            Button(action: {
+                isCreateNewTask.toggle()
+            }, label: {
+                Image(systemName: "plus")
+                    .foregroundColor(.white)
+                    .frame(width: 55, height: 55)
+                    .background(Color(.blue), in: .circle)
+            })
+            .padding(15)
+        })
         .onAppear(perform: {
             if weekslider.isEmpty{
                 let currentWeek = Date().fetchWeek()
@@ -57,9 +53,11 @@ struct ContentView: View {
                 }
             }
         })
+        .sheet(isPresented: $isCreateNewTask, content: {
+            NewTaskView()
+                .presentationDetents([.height(300)])
+        })
     }
-    
-
 }
 
 #Preview {
@@ -69,10 +67,12 @@ struct ContentView: View {
 struct Header : View {
     
     @Binding var currentDate : Date
+    @Binding var currentWeekIndex : Int
+    @Binding var weekslider : [[Date.Weekday]]
     
     var body: some View {
         VStack(alignment: .leading, spacing: 6){
-            HStack(alignment : .top ,spacing : 10){
+            HStack(spacing : 10){
                 Text(currentDate.format("MMMM"))
                     .foregroundStyle(.blue)
                 Text(currentDate.format("YYYY"))
@@ -90,7 +90,32 @@ struct Header : View {
                     .foregroundStyle(.gray)
                 
             }
+            TabView(selection: $currentWeekIndex){
+                ForEach(0..<weekslider.count, id: \.self) { index in
+                    let week = weekslider[index]
+                    WeekView(currentDate: $currentDate, week : week)
+                        .tag(index)
+                }
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .frame(height: 90)
+            .onChange(of: currentWeekIndex) { oldvalue, newvalue in
+                if let firstDate = weekslider[currentWeekIndex].first?.date, newvalue == 0 {
+                    weekslider.insert(firstDate.fetchPreviousWeek(), at: 0)
+                    weekslider.removeLast()
+                    currentWeekIndex = 1
+                }
+                if let lastDate = weekslider[currentWeekIndex].last?.date, newvalue == weekslider.count - 1 {
+                    weekslider.append(lastDate.fetchNextWeek())
+                    weekslider.removeFirst()
+                    currentWeekIndex = 1
+                }
+                
+            }
         }
+        .padding(15)
+        .background(.white)
+        
     }
 }
 
@@ -102,7 +127,7 @@ struct WeekView : View {
     var week : [Date.Weekday]
     
     var body: some View {
-        HStack{
+        HStack(alignment: .top){
             ForEach(week) { day in
                 VStack( alignment : .leading, spacing : 8){
                     Text(day.date.format("E"))
@@ -141,6 +166,5 @@ struct WeekView : View {
                 }
             }
         }
-        .frame(maxHeight : .infinity, alignment: .top)
     }
 }
