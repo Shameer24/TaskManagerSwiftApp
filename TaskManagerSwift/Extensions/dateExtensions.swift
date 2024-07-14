@@ -20,6 +20,14 @@ extension Date{
         return Calendar.current.isDateInToday(self)
     }
     
+    var isSameHour : Bool {
+        return Calendar.current.compare(self, to : .init(), toGranularity: .hour) == .orderedSame
+    }
+    
+    var isPastHour : Bool {
+        return Calendar.current.compare(self, to : .init(), toGranularity : .hour) == .orderedAscending
+    }
+    
     func isSameDate(_ date1 : Date , _ date2 : Date) -> Bool {
         return Calendar.current.isDate(date1, inSameDayAs: date2)
     }
@@ -34,7 +42,7 @@ extension Date{
         let startDate = calendar.startOfDay(for: date)
         
         var week : [Weekday] = []
-        let weekForDate = calendar.dateInterval(of: .weekOfMonth, for: startDate)
+        let weekForDate = calendar.dateInterval(of: .weekOfYear, for: startDate)
         guard let startOfWeek = weekForDate?.start else {
             return []
         }
@@ -45,6 +53,7 @@ extension Date{
             }
             
         }
+        print(week)
         return week
     }
     

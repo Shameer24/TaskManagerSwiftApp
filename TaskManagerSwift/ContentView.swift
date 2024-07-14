@@ -65,10 +65,11 @@ struct ContentView: View {
 }
 
 struct Header : View {
-    
+    @State var calendarId: Int = 0
     @Binding var currentDate : Date
     @Binding var currentWeekIndex : Int
     @Binding var weekslider : [[Date.Weekday]]
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack(alignment: .leading, spacing: 6){
@@ -77,9 +78,50 @@ struct Header : View {
                     .foregroundStyle(.blue)
                 Text(currentDate.format("YYYY"))
                     .foregroundStyle(.blue)
+                Image(systemName: "calendar")
+                    .font(.title3)
+                    .overlay{
+                        DatePicker(
+                            "",
+                            selection: $currentDate,
+                            displayedComponents: [.date]
+                        )
+                        .id(calendarId)
+                        .labelsHidden()
+                        .blendMode(.destinationOver)
+                        .scaleEffect(1.5, anchor: .leading)
+                        .padding(.leading, -150)
+                        .onChange(of: currentDate) { oldValue, newValue in
+                            let components = Calendar.current.dateComponents([.year, .month], from: oldValue, to: newValue)
+                            guard components.year == 0 && components.month == 0 else {
+                                return
+                            }
+                            calendarId += 1
+                            print(newValue)
+                            weekslider.removeAll()
+                            print(weekslider)
+                            let currentWeek = newValue.fetchWeek()
+                            
+                            if let firstDate = currentWeek.first?.date {
+                                weekslider.append(firstDate.fetchPreviousWeek())
+                            }
+                            weekslider.append(currentWeek)
+                            
+                            if let lastDate = currentWeek.last?.date {
+                                weekslider.append(lastDate.fetchNextWeek())
+                            }
+                            print(weekslider)
+                            currentWeekIndex = 1
+                        }
+                        
+                    }
             }
             .frame(maxWidth : .infinity, alignment: .leading)
             .font(.title.bold())
+            .onChange(of: currentDate){
+                
+            }
+            
             
             
             HStack(spacing : 0){

@@ -96,6 +96,7 @@ struct NewTaskView: View {
                 do{
                     context.insert(task)
                     try context.save()
+                        dismiss()
                 } catch{
                     print(error.localizedDescription)
                 }
@@ -108,9 +109,9 @@ struct NewTaskView: View {
                     .frame(maxWidth : .infinity ,alignment: .center)
                     .padding(12)
                     .background(Color[taskColor], in: .rect(cornerRadius: 10))
-                    
-                    
             })
+            .disabled(taskTitle == "")
+            .opacity(taskTitle == "" ? 0.5 : 1)
         }
         .padding(15)
     }

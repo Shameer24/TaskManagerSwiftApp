@@ -13,6 +13,7 @@ struct TasksView : View {
     
     @Binding var currentDate : Date
     @Query private var Tasks : [Task]
+    @Environment(\.modelContext) private var context
     
     init(currentDate: Binding<Date>) {
         self._currentDate = currentDate
@@ -33,9 +34,20 @@ struct TasksView : View {
             ForEach(Tasks) {task in
                 HStack(alignment : .top, spacing: 15){
                     Circle()
-                        .fill(task.isCompleted ? .red : .green)
+                        .fill(task.isCompleted ? .green : (task.creationDate.isSameHour ? .blue : (task.creationDate.isPastHour ? .red : .black)))
                         .frame(width: 10, height: 10)
                         .padding(4)
+                        .background(.white.shadow(.drop(color: .black.opacity(0.1), radius: 3)) , in: .circle)
+                        .overlay {
+                            Circle()
+                                .frame(width : 50, height: 50)
+                                .blendMode(.destinationOver)
+                                .onTapGesture {
+                                    withAnimation(.snappy) {
+                                        task.isCompleted.toggle()
+                                    }
+                                }
+                        }
                     
                     VStack(alignment : .leading, spacing: 8){
                         Text(task.taskTitle)
@@ -50,10 +62,24 @@ struct TasksView : View {
                     .padding(15)
                     .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
                     .background(Color[task.tint], in: .rect(topLeadingRadius: 15, bottomLeadingRadius: 15, bottomTrailingRadius: 15, topTrailingRadius: 15))
+                    .contextMenu {
+                        Button("Delete Task", role : .destructive){
+                            context.delete(task)
+                            try? context.save()
+                        }
+                    }
                     .offset(y : -8)
                     
                 }
                 .frame(maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
+                .background(alignment : .leading){
+                    if Tasks.last?.id != task.id{
+                        Rectangle()
+                            .frame(width:1)
+                            .offset(x : 8)
+                            .padding(.bottom, -35)
+                    }
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
