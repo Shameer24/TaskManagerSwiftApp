@@ -100,7 +100,7 @@ struct Header : View {
                             print(newValue)
                             weekslider.removeAll()
                             print(weekslider)
-                            let currentWeek = newValue.fetchWeek()
+                            let currentWeek = newValue.fetchWeek(Calendar.current.startOfDay(for: newValue))
                             
                             if let firstDate = currentWeek.first?.date {
                                 weekslider.append(firstDate.fetchPreviousWeek())
